@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:asteroid_test/models/circle.dart';
 import 'package:asteroid_test/pages/game_over.dart';
 import 'package:asteroid_test/widgets/circle_painter.dart';
-import 'package:asteroid_test/widgets/player.dart';
 import 'package:asteroid_test/widgets/user_input.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +73,7 @@ class _PlayGroundState extends State<PlayGround> {
   }
 
   void _startMovement() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingTime > 0) {
         setState(() {
           _remainingTime--;
@@ -109,9 +108,8 @@ class _PlayGroundState extends State<PlayGround> {
             );
           }
           if (_checkCollision(circle)) {
-            print("Game Over");
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GameOverScreen()));
+                MaterialPageRoute(builder: (context) => const GameOverScreen()));
             _timer.cancel(); // Stop the movement
             break;
           }
@@ -152,21 +150,21 @@ class _PlayGroundState extends State<PlayGround> {
     return Scaffold(
       body: Stack(
         children: [
-          // MouseRegion(
-          //   cursor: SystemMouseCursors.none,
-          //   onHover: (event) {
-          //     setState(() {
-          //       _mousePosition = event.position;
-          //     });
-          //   },
-          //   child:
+          MouseRegion(
+            cursor: SystemMouseCursors.none,
+            onHover: (event) {
+              setState(() {
+                _mousePosition = event.position;
+              });
+            },
+            child:
           _circles.isNotEmpty
               ? CirclePainter(
                   mousePosition: _mousePosition,
                   circles: _circles,
                 )
               : const Center(child: Text('No circles to display')),
-          // ),
+          ),
           Positioned(
               left: 0,
               top: 0,

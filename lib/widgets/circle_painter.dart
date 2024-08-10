@@ -17,14 +17,14 @@ class CirclePainter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Positioned(
-        //   left: mousePosition.dx,
-        //   top: mousePosition.dy,
-        //   child: CircleAvatar(
-        //     radius: 10,
-        //     backgroundColor: AppColors.white,
-        //   ),
-        // ),
+        Positioned(
+          left: mousePosition.dx,
+          top: mousePosition.dy,
+          child: CircleAvatar(
+            radius: 10,
+            backgroundColor: AppColors.white,
+          ),
+        ),
          const Player(),
         ...circles.map((circle) {
           return Positioned(

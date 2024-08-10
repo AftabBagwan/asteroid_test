@@ -52,6 +52,7 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return RawKeyboardListener(
       focusNode: _focusNode,
       autofocus: true, // Ensure the widget gains focus automatically
