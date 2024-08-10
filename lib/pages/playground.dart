@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:asteroid_test/models/circle.dart';
 import 'package:asteroid_test/pages/game_over.dart';
 import 'package:asteroid_test/widgets/circle_painter.dart';
+import 'package:asteroid_test/widgets/player.dart';
 import 'package:asteroid_test/widgets/user_input.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _PlayGroundState extends State<PlayGround> {
   late Offset _mousePosition;
   late Timer _timer;
   late Size _screenSize;
+  int _remainingTime = 180;
 
   final TextEditingController _numCirclesController =
       TextEditingController(text: '10');
@@ -65,7 +67,24 @@ class _PlayGroundState extends State<PlayGround> {
     });
   }
 
+  String _formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
   void _startMovement() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_remainingTime > 0) {
+        setState(() {
+          _remainingTime--;
+        });
+      } else {
+        timer.cancel();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const GameOverScreen()));
+      }
+    });
     _timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       setState(() {
         for (var circle in _circles) {
@@ -133,20 +152,31 @@ class _PlayGroundState extends State<PlayGround> {
     return Scaffold(
       body: Stack(
         children: [
-          MouseRegion(
-            cursor: SystemMouseCursors.none,
-            onHover: (event) {
-              setState(() {
-                _mousePosition = event.position;
-              });
-            },
-            child: _circles.isNotEmpty
-                ? CirclePainter(
-                    mousePosition: _mousePosition,
-                    circles: _circles,
-                  )
-                : const Center(child: Text('No circles to display')),
-          ),
+          // MouseRegion(
+          //   cursor: SystemMouseCursors.none,
+          //   onHover: (event) {
+          //     setState(() {
+          //       _mousePosition = event.position;
+          //     });
+          //   },
+          //   child:
+          _circles.isNotEmpty
+              ? CirclePainter(
+                  mousePosition: _mousePosition,
+                  circles: _circles,
+                )
+              : const Center(child: Text('No circles to display')),
+          // ),
+          Positioned(
+              left: 0,
+              top: 0,
+              child: Text(
+                _formatTime(_remainingTime),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                ),
+              )),
           Positioned(
             right: 20,
             top: 20,
